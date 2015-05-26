@@ -1,8 +1,8 @@
 install: clean all
 	mv main.exe ../build/main.exe
-	mv mylib.so ../build/mylib.so
+	mv libcpp.so ../build/libcpp.so
 
-all: mylib main
+all: libcpp main
 
 monitor:
 	g++ -c -fPIC monitor.cpp -std=c++11
@@ -10,8 +10,8 @@ monitor:
 main:
 	mcs main.cs
 
-mylib: monitor
-	g++ -shared -fPIC -o mylib.so monitor.o
+libcpp: monitor
+	g++ -shared -fPIC -o libcpp.so monitor.o
 
 clean:
 	rm -f *.o *.cpp~ *.so *.h~ *.cs~ *.exe

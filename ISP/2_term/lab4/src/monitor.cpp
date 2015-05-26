@@ -51,27 +51,30 @@ static unsigned long long lastTotalUser, lastTotalUserLow, lastTotalSys, lastTot
 
 double getCpuUsage() 
 {
-    FILE* file = fopen("/proc/stat", "r");
-    fscanf(file, "cpu %Ld %Ld %Ld %Ld", &lastTotalUser, &lastTotalUserLow,
-    &lastTotalSys, &lastTotalIdle);
-    fclose(file);
-
     double percent;
+    FILE* file;
     unsigned long long totalUser, totalUserLow, totalSys, totalIdle, total;
 
-
     file = fopen("/proc/stat", "r");
-    fscanf(file, "cpu %Ld %Ld %Ld %Ld", &totalUser, &totalUserLow,
-        &totalSys, &totalIdle);
+    fscanf(file, "cpu %Ld %Ld %Ld %Ld", &totalUser, &totalUserLow, &totalSys, &totalIdle);
     fclose(file);
 
-
-    total = (totalUser - lastTotalUser) + (totalUserLow - lastTotalUserLow) +
+    if (totalUser < lastTotalUser || totalUserLow < lastTotalUserLow || totalSys < lastTotalSys || totalIdle < lastTotalIdle){
+        percent = -1.0;
+    } 
+    else
+     {
+        total = (totalUser - lastTotalUser) + (totalUserLow - lastTotalUserLow) +
         (totalSys - lastTotalSys);
-    percent = total;
-    total += (totalIdle - lastTotalIdle);
-    percent /= total;
-    percent *= 100;
+        percent = total;
+        total += (totalIdle - lastTotalIdle);
+        percent /= total;
+        percent *= 100;
+    }
+    lastTotalUser = totalUser;
+    lastTotalUserLow = totalUserLow;
+    lastTotalSys = totalSys;
+    lastTotalIdle = totalIdle;
 
     return percent;
 }
