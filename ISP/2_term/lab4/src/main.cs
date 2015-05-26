@@ -6,21 +6,21 @@ using System.Runtime.InteropServices;
 
 public class monitor 
 {
-    [DllImport ("mylib.so", EntryPoint = "getUsedRAM")] static public extern ulong getUsedRAM;
-    [DllImport ("mylib.so", EntryPoint = "getUsedSwapMemory")] static public extern ulong getUsedSwapMemory;
-    [DllImport ("mylib.so", EntryPoint = "getFreeRAM")] static public extern ulong getFreeRAM;
-    [DllImport ("mylib.so", EntryPoint = "getFreeSwapMemory")] static public extern ulong getFreeSwapMemory;
-    [DllImport ("mylib.so", EntryPoint = "getCpuUsage")] static public extern double getCpuUsage;
+    [DllImport ("mylib.so", EntryPoint = "getUsedRAM")] static public extern ulong getUsedRAM();
+    [DllImport ("mylib.so", EntryPoint = "getUsedSwapMemory")] static public extern ulong getUsedSwapMemory();
+    [DllImport ("mylib.so", EntryPoint = "getFreeRAM")] static public extern ulong getFreeRAM();
+    [DllImport ("mylib.so", EntryPoint = "getFreeSwapMemory")] static public extern ulong getFreeSwapMemory();
+    [DllImport ("mylib.so", EntryPoint = "getCpuUsage")] static public extern double getCpuUsage();
 }
 
 public class Lab4 
 {
-    public static void main() 
+    public static void Main() 
     {
-        while (42) 
+        while (true) 
         {
             Thread.Sleep(1000);
-            Console.Clear;
+            Console.Clear();
 
             Console.WriteLine("Used RAM = {0}MB\n", monitor.getUsedRAM());
             Console.WriteLine("Free RAM = {0}MB\n", monitor.getFreeRAM());

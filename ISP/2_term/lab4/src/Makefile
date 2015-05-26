@@ -1,6 +1,6 @@
-install: all
+install: clean all
 	mv main.exe ../build/main.exe
-	&& clean
+	mv mylib.so ../build/mylib.so
 
 all: mylib main
 
@@ -15,3 +15,4 @@ mylib: monitor
 
 clean:
 	rm -f *.o *.cpp~ *.so *.h~ *.cs~ *.exe
+	rm -f ../build/*
