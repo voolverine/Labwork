@@ -53,8 +53,6 @@ public class Rational: IEquatable<Rational>, IComparable<Rational>
         n = temp.n;
     }
 
-
-
     public bool Equals(Rational r) 
     {
         if (n == r.n && m == r.m) 
@@ -108,7 +106,6 @@ public class Rational: IEquatable<Rational>, IComparable<Rational>
 
         return 0;
     }
-
 
     private static int gcd(int a, int b) 
     {
@@ -311,13 +308,13 @@ public class Rational: IEquatable<Rational>, IComparable<Rational>
         remove_gcd(ref r);
     }
 
-
     public static explicit operator Rational(string s) 
     {
         Rational result = new Rational();
         getFromString(ref result, s);
         return result;
     }
+
 }
 
 
@@ -325,35 +322,42 @@ public class Lab7
 {
     public static void buble_sort(Rational[] arr, int n) 
     {
+
         for (int i = 0; i < n; i++) 
         {
             for (int j = i + 1; j < n; j++) 
             {
+
                 if (arr[i].CompareTo(arr[j]) > 0) 
                 {
                     arr[i].Swap(ref arr[j]);
                 }
+
             }
+
         }
 
     }
-
 
     public static void Main() 
     {
         Random rnd = new Random();
         Rational[] arr = new Rational[10];
+
         for (int i = 0; i < 10; i++) 
         {
             arr[i] = new Rational(rnd.Next(1000) + 1, rnd.Next(100) + 1); 
             Console.WriteLine("{0} = {1}", (string)arr[i], (double)arr[i]);
         }
+
         Console.WriteLine("\nSorted:\n");
         buble_sort(arr, 10);
+
         for (int i = 0; i < 10; i++) 
         {
             Console.WriteLine("{0} = {1}", (string)arr[i], (double)arr[i]);
         }
+
         Console.WriteLine("");
         Console.WriteLine("{0} + {1} = {2} = {3}", (string)arr[0], (string)arr[1], (string)(arr[0] + arr[1]), (double)(arr[0] + arr[1]));
         Console.WriteLine("{0} - {1} = {2} = {3}", (string)arr[0], (string)arr[1], (string)(arr[0] - arr[1]), (double)(arr[0] - arr[1]));
