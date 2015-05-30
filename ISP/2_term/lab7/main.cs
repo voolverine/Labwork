@@ -19,6 +19,9 @@ public class Rational: IEquatable<Rational>, IComparable<Rational>
             if (value <= 0) 
             {
                 throw new Exception("N should be natural.");
+            } eslse 
+            {
+                n = value;
             }
         }
     }
