@@ -291,6 +291,11 @@ public class Rational: IEquatable<Rational>, IComparable<Rational>
         {
             if (s[i] == '/') 
             {
+                if (i + 1 < s.Length && s[i + 1] == '-') 
+                {
+                    throw new Exception("!");
+                }
+
                 f = true;
                 continue;
             }
