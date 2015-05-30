@@ -29,21 +29,21 @@ public class Rational: IEquatable<Rational>, IComparable<Rational>
 
     public Rational() 
     {
-        n = 0;
-        m = 1;
+        N = 1;
+        M = 0;
     }
 
     public Rational(int m, int n = 1) 
     {
-        this.m = m;
-        this.n = n;
+        this.M = m;
+        this.N = n;
         remove_gcd(ref this.n, ref this.m);
     }
 
     public Rational(Rational r) 
     {
-        m = r.m;
-        n = r.n;
+        M = r.m;
+        N = r.n;
     }
 
     public void Swap(ref Rational r) 
@@ -261,9 +261,9 @@ public class Rational: IEquatable<Rational>, IComparable<Rational>
 
     public static implicit operator double(Rational a) 
     {
-        double N = a.n;
-        double M = a.m;
-        return M / N;
+        double nn = a.n;
+        double mm = a.m;
+        return mm / nn;
     }
 
     public static implicit operator string(Rational a) 
@@ -278,7 +278,7 @@ public class Rational: IEquatable<Rational>, IComparable<Rational>
 
     public override int GetHashCode() 
     {
-        return (this.m / this.n).GetHashCode();
+        return (m / n).GetHashCode();
     }
 
 
@@ -307,7 +307,9 @@ public class Rational: IEquatable<Rational>, IComparable<Rational>
         {
             r.m = -r.m;
         }
-
+        
+        r.M = r.m;
+        r.N = r.n;
         remove_gcd(ref r);
     }
 
