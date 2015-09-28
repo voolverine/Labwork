@@ -219,6 +219,10 @@ start:
     ; first number in AX
     MOV AX, CX
     XOR DX, DX
+
+    CMP BX, 0
+    JZ show_error
+
     DIV BX
 
     CALL PrintWriter
@@ -246,4 +250,6 @@ start:
         CALL PrintEOL
         CALL Return
 
+    show_error:
+        CALL PrintError
 end start
