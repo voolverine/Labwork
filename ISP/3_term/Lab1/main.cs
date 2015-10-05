@@ -6,10 +6,11 @@ class Question
 {
     private string question;
     private int answer;
-    private List<string> answers;
+    private List<string> answers = new List<string> ();
 
     public int Answer
     {
+        get {return answer;}
         set {answer = value;}
     }
 
@@ -18,12 +19,6 @@ class Question
         set {question = value;}
         get {return question;}
     }
-
-    public string this[int index] 
-    {
-        get {return answers[index];}
-    }
-
 
 
     public Question(string question) 
@@ -36,7 +31,7 @@ class Question
     public Question(string question, List<string> possible_answers, int answer) 
     {
         Add_possible_answer("I don't know ;("); 
-        Answer = answer;
+        Answer = answer + 1;
         Q = question;
         foreach (string ans in possible_answers) 
         {
@@ -60,15 +55,15 @@ class Question
         {
             answer--;
         }
-
         
         answers.RemoveAt(index);
+       
         return true;
     }
 
     public void show_question()
     {
-        Console.WriteLine(Question); 
+        Console.WriteLine(Q); 
         int i = 0;
 
         foreach (string ans in answers) 
@@ -77,84 +72,12 @@ class Question
             Console.WriteLine("\t{0}) {1}", i, ans);        
         }
     }
-
-    public int ShowMenuAndWait() 
-    {
-        Console.WriteLine("\n-------QuestionEditor-------\n");
-        Console.WriteLine("1 - show question");
-        Console.WriteLine("2 - add new possible answer");
-        Console.WriteLine("3 - remove possible answer");
-        Console.WriteLine("4 - change right answer");
-        Console.WriteLine("5 - return to TestEditor");
-        Console.WriteLine("-------QuestionEditor-------\n");
-
-        return Int32.Parse(Console.ReadLine());
-    }
-
-    public void Edit() 
-    {
-        while (true) 
-        {
-            int what_to_do = ShowMenuAndWait();
-            switch (what_to_do) 
-            {
-                case 1:
-                    show_question();
-                    break;
-
-                case 2:
-                    Add_possible_answer(Console.ReadLine());
-                    break;
-
-                case 3:
-                    bool f = remove_possible_answer(Int32.Parse(Console.ReadLine()));
-                    if (!f) 
-                    {
-                        Console.WriteLine("Something going wrong ;( Try again please\n");
-                    }
-                    break;
-
-                case 4:
-                    int new_ans = Int32.Parse(Console.ReadLine());
-                    if (new_ans >= 0 && new_ans < answers.Count) 
-                    {
-                        Answer = new_ans;
-                    } else 
-                    {
-                         Console.WriteLine("Something going wrong ;( Try again please\n");
-                    }
-                    break;
-
-                case 5:
-                    return;
-                    break;
-
-                default:
-                    Console.WriteLine("Something going wrong ;( Try again please\n");
-                    break;
-            }
-        }
-    }
-
-
-    IEnumerator IEnumerable.GetEnumerator() 
-    {
-        return GetEnumerator();
-    }
-
-    public IEnumerator GetEnumerator() 
-    {
-        foreach (string ans in answers) 
-        {
-            yield return ans;
-        }
-    }
 }
 
 class Test : IEnumerable 
 {
     private string name;
-    private List<Question> questions;
+    private List<Question> questions = new List<Question> ();
    
 
     public string Name 
@@ -167,6 +90,13 @@ class Test : IEnumerable
     {
         Name = name;
     }
+
+    public Question this[int index] 
+    {
+        get {return questions[index];}
+        set {questions[index] = value;}
+    }
+
 
     public void AddQuestion(Question new_question) 
     {
@@ -183,81 +113,6 @@ class Test : IEnumerable
 
         questions.RemoveAt(index);
         return true;
-    }
-
-    public void ShowQuestions() 
-    {
-        int i = 0;
-        foreach (Question question in questions) 
-        {
-            i++;
-            Console.WriteLine("{0}. ", question.Q);
-        }
-    }
-
-
-    public int ShowMenuAndWait() 
-    {
-        Console.WriteLine("\n-------TestEditor-------\n");
-        Console.WriteLine("1 - add question");
-        Console.WriteLine("2 - remove question");
-        Console.WriteLine("3 - edit question");
-        Console.WriteLine("4 - show all questions");
-        Console.WriteLine("5 - return to TextManager");
-        Console.WriteLine("-------TestEditor-------\n");
-        return Int32.Parse(Console.ReadLine());
-    }
-
-    public void Edit() 
-    {
-        while (true) 
-        {
-            int what_to_do = ShowMenuAndWait();
-            switch (what_to_do) 
-            {
-                case 1:
-                    Console.WriteLine("Print Question");
-                    AddQuestion(new Question(Console.ReadLine()));
-                    break;
-
-                case 2:
-                    ShowQuestions();
-                    Console.WriteLine("Print Question Number");
-                    bool f = RemoveQuestion(Int32.Parse(Console.ReadLine()));
-                    if (!f) 
-                    {
-                        Console.WriteLine("Something going wrong ;( Try again please\n");
-                    }
-
-                    break;
-
-                case 3:
-                    ShowQuestions();
-                    Console.WriteLine("Print Question Number");
-                    int question_num = Int32.Parse(Console.ReadLine());
-                    if (question_num >= 0 && question_num <= questions.Count) 
-                    {
-                        questions[question_num].Edit();
-                    } else 
-                    {
-                        Console.WriteLine("Something going wrong ;( Try again please\n");
-                    }
-                    break;
-
-                case 4:
-                    ShowQuestions();
-                    break;
-
-                case 5:
-                    return;
-                    break;
-
-                default:
-                    Console.WriteLine("Something going wrong ;( Try again please\n");
-                    break;
-            }
-        }
-
     }
 
 
@@ -277,17 +132,7 @@ class Test : IEnumerable
 
 class main 
 {
-    List<Test> myTests;
-
-    public void ShowAllTests() 
-    {
-        int i = 0;
-        foreach (Test test in myTests) 
-        {
-            i++;
-            Console.WriteLine("{0}. {1}", i, test.Name);
-        }
-    }
+    public static List<Test> myTests = new List<Test> ();
 
     public void AddNewTest() 
     {
@@ -305,20 +150,6 @@ class main
 
         myTests.RemoveAt(index);
         return true;
-    }
-
-    public void EditTest() 
-    {
-        ShowAllTests();
-        Console.WriteLine("Print test number");
-        int test_num = Int32.Parse(Console.ReadLine()); 
-        if (test_num < 0 || test_num >= myTests.Count) 
-        {
-            Console.WriteLine("There is no such test.");
-            return;
-        }
-
-        myTests[test_num].Edit();
     }
 
     public static void Emulate(Test current_Test) 
@@ -339,85 +170,29 @@ class main
             }
         }
 
-        Console.WriteLine("\n\tTest successfully finished. Your result if {0} of {1}.", rightA, all_questions);
-    }
-
-    public static int ShowMenuAndWait() 
-    {
-        Console.WriteLine("\n-------TestManager-------\n");
-        Console.WriteLine("1 - show all tests");
-        Console.WriteLine("2 - add new test");
-        Console.WriteLine("3 - remove test");
-        Console.WriteLine("4 - start some test");
-        Console.WriteLine("5 - edit test");
-        Console.WriteLine("6 - exit");
-        Console.WriteLine("-------TestManager-------\n");
-
-        return Int32.Parse(Console.ReadLine());
+        Console.WriteLine("\n\n\n\t\t\t\t\t\t\t\t\t\t\tTest successfully finished. Your result is {0} of {1}.", rightA, all_questions);
     }
 
 
     public static void Main() 
     {
-        while (true) 
-        {
-            int what_to_do = ShowMenuAndWait();
-            switch (what_to_do) 
-            {
-                case 1:
-                    ShowAllTests(); 
-                    break;
 
-                case 2:
-                    AddNewTest(); 
-                    break;
+        /*
+         * Auto add idk answer to each question
+         */
 
-                case 3:
-                    ShowAllTests();
-                    Console.WriteLine("Print test number");
-                    int test_num = Int32.Parse(Console.ReadLine());
-                    if (test_num < 0 || test_num >= myTests.Count) 
-                    {
-                        Console.WriteLine("There is no such test");
-                        break;
-                    }
+        myTests.Add(new Test("Random Test"));  // Add test
+        myTests[0].AddQuestion(new Question("Who am I?", new List<string> {"Monkey", "Human", "Dog", "Cat"}, 3)); // Add question in the first test
+        myTests[0][0].remove_possible_answer(4); // remove DOG from answers of first test of first question
+        myTests[0][0].Add_possible_answer("Butterfly"); // add new answer to first test first question
 
-                    RemoveTest(test_num);
-                    break;
+        myTests[0].AddQuestion(new Question("What is BSUIR?")); // add second question to the first test
+        myTests[0][1].Add_possible_answer("University"); // add possible anser to the second question of the first test
+        myTests[0][1].Add_possible_answer("City"); // add possible anser to the second question of the first test
+        myTests[0][1].Answer = 2; // set second answer as right (University), idk is the first answer
 
-                case 4:
-                    ShowAllTests();
-                    Console.WriteLine("Print test number");
-                    test_num = Int32.Parse(Console.ReadLine());
-                    if (test_num < 0 || test_num >= myTests.Count) 
-                    {
-                        Console.WriteLine("There is no such test");
-                        break;
-                    }
+        myTests[0].RemoveQuestion(2); // Remove second question from first test
 
-                    Emulate(myTests[test_num]);
-                    break;
-
-                case 5:
-                    ShowAllTests();
-                    Console.WriteLine("Print test number");
-                    test_num = Int32.Parse(Console.ReadLine());
-                    if (test_num < 0 || test_num >= myTests.Count) 
-                    {
-                        Console.WriteLine("There is no such test");
-                        break;
-                    }
-                    
-                    myTests[test_num].Edit();
-                    break;
-
-                case 6:
-                    return;
-
-                default:
-                    Console.WriteLine("Something going wrong ;( Try again please\n");
-                    break;
-            }
-        }
+        Emulate(myTests[0]); // Run first test
     }
 }
