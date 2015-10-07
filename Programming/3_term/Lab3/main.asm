@@ -87,8 +87,10 @@ InputReader PROC
         JA getchar
 
         CMP AL, '-'
-        JZ Zero_check
+        JNZ temp
+        JMP zero_check
 
+        temp:
         CMP AL, '0'
         JB getchar
        
@@ -115,9 +117,19 @@ InputReader PROC
         SUB CL, '0'
         ADD BX, CX
         JB upper_bound_exception
+        
+        TEST SI, SI
+        JNZ negativate_one
 
-        CMP BX, 32767 
-        JA upper_bound_exception
+        positive_one:
+            CMP BX, 32767 
+            JA upper_bound_exception
+            JMP back_one
+        negativate_one:
+            CMP BX, 32768
+            JA upper_bound_exception
+
+        back_one:
         XOR AX, AX
 
         Zero_check_return:
@@ -327,8 +339,22 @@ start:
     JZ show_error
     
     CWD
+
+    MOV DI, 32767
+    NEG DI
+    DEC DI
+    CMP AX, DI 
+    JNZ perform
+    MOV DI, 1
+    NEG DI
+    CMP BX, DI 
+    JZ show_error
+
+    perform:
+
     IDIV BX
 
+    MOV CX, AX
     CALL PrintWriter
 
     TEST DX, DX
@@ -340,9 +366,18 @@ start:
     INT 21h
 
     POP AX
+    TEST CX, CX
+    JZ skip
+
     CALL Make_positive ; make ax positive
+    skip:
+        TEST BX, BX
+        JS make_ax_negative
+        back:
     PUSH AX
     MOV AX, BX
+
+
     CALL Make_positive ; make bx positive
     MOV BX, AX
     POP AX
@@ -364,4 +399,9 @@ start:
 
     show_error:
         CALL PrintError
+    make_ax_negative:
+        TEST CX, CX
+        JNZ back
+        NEG AX
+        JMP back
 end start
