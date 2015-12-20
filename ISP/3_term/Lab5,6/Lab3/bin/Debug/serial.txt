@@ -1,0 +1,21 @@
+<Dictionary`2>
+	<Count>3</Count>
+	<KeyValuePair`2>
+		<Int32>1</Int32>
+		<String>I</String>
+	</KeyValuePair`2>
+	<KeyValuePair`2>
+		<Int32>2</Int32>
+		<String>love</String>
+	</KeyValuePair`2>
+	<KeyValuePair`2>
+		<Int32>3</Int32>
+		<String>Katuchu</String>
+	</KeyValuePair`2>
+	<Int32>3</Int32>
+	<Int32>3</Int32>
+	<Int32>-1</Int32>
+	<Int32>0</Int32>
+	<GenericEqualityComparer`1>
+	</GenericEqualityComparer`1>
+</Dictionary`2>

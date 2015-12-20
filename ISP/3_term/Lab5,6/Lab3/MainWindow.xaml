@@ -1,0 +1,71 @@
+﻿<Window x:Class="Lab3.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="834" Width="1247">
+    <Grid Grid.IsSharedSizeScope="True">
+
+        <Grid Margin="20,80,400,20" Width="700" Background="Orange" HorizontalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300" SharedSizeGroup="InitialsColumn" />
+                <ColumnDefinition Width="100" SharedSizeGroup="AgeColumn"/>
+                <ColumnDefinition Width="100" SharedSizeGroup="GroupColumn"/>
+                <ColumnDefinition Width="200" SharedSizeGroup="AvgMarkColumn"/>
+            </Grid.ColumnDefinitions>
+            <Border Grid.Column="0">
+                <TextBlock Text="Initials" HorizontalAlignment="Center" FontWeight="Bold" FontSize="14" />
+            </Border>
+            <Border Grid.Column="1" >
+                <TextBlock Text="Age" HorizontalAlignment="Center" FontWeight="Bold" FontSize="14" />
+            </Border>
+            <Border Grid.Column="2">
+                <TextBlock Text="Group" HorizontalAlignment="Center" FontWeight="Bold" FontSize="14" />
+            </Border>
+            <Border Grid.Column="3">
+                <TextBlock Text="Average Mark" HorizontalAlignment="Center" FontWeight="Bold" FontSize="14" />
+            </Border>
+        </Grid>
+
+        <ListBox Margin="20,100,400,20" Width="700" Background="White" x:Name="listbox">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Height="20" HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition SharedSizeGroup="InitialsColumn" />
+                            <ColumnDefinition SharedSizeGroup="AgeColumn"/>
+                            <ColumnDefinition SharedSizeGroup="GroupColumn"/>
+                            <ColumnDefinition SharedSizeGroup="AvgMarkColumn"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{Binding Initials}" Grid.Column="0" HorizontalAlignment="Left"/>
+                        <TextBlock Text="{Binding Age}" Grid.Column="1" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding Group}" Grid.Column="2" HorizontalAlignment="Center"/>
+                        <TextBlock Text="{Binding Avg_mark}" Grid.Column="3" HorizontalAlignment="Center"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <TextBox Margin="891,86,204,691" Name="initials" />
+        <TextBlock Margin="829,86,348,691" Text="Initials" FontWeight="Bold"/>
+        <TextBox Margin="891,117,204,660" Name="age" MaxLength="9" />
+        <TextBlock Margin="829,117,348,660" Text="Age" FontWeight="Bold"/>
+        <TextBox Margin="891,148,204,629" Name="group" MaxLength="9" />
+        <TextBlock Margin="829,148,348,629" Text="Group" FontWeight="Bold"/>
+        <TextBox Margin="891,179,204,598" Name="avg_mark" MaxLength="9" />
+        <TextBlock Margin="804,179,348,598" Text="Average mark" FontWeight="Bold" RenderTransformOrigin="0.113,0.385" />
+        <Button Content="Add" Margin="960,220,204,548" Click="Button_Click" Background="Aqua" Cursor="Hand" />
+        <Button Content="Remove" Margin="804,220,295,548" Click="Button_Click_1" Background="Firebrick" Cursor="Hand" />
+        <Button Content="Sort by Initials" Margin="1074,180,25,588" Click="Button_Click_2" Cursor="Hand" />
+        <Button Content="Group students" Margin="1074,220,25,548" Click="Button_Click_3" Cursor="Hand" />
+        <Button Content="Save to file" Margin="873,668,226,100" Cursor="Hand" Click="Button_Click_4" />
+        <Button Content="Load from file" Margin="1017,668,82,100" Cursor="Hand" Click="Button_Click_5" />
+        <Button Content="Save to binary file" Margin="873,708,226,60" Cursor="Hand" Click="Button_Click_6" />
+        <Button Content="Load from binary file" Margin="1017,708,82,60" Cursor="Hand" Click="Button_Click_7" />
+        <Button Content="Compress binary file" Margin="873,748,226,20" Cursor="Hand" Click="Button_Click_8" />
+        <Button Content="Decompress to binary file" Margin="1017,748,82,20" Cursor="Hand" Click="Button_Click_9" />
+        <Button Content="Find" Margin="1050,86,114,691" Background="#FF7AF95E" Cursor="Hand" Click="Button_Click_10" />
+        <Button Content="Expell students" Margin="804,276,295,492" Cursor="Hand" Click="Button_Click_11" />
+        <Button Content="University average mark" Margin="804,316,295,452" Cursor="Hand" Click="Button_Click_12" />
+        <Button Content="Group's average mark" Margin="804,356,295,412" Cursor="Hand" Click="Button_Click_13" />
+        <Button Content="Serialise" Margin="804,396,295,372" Cursor="Hand" Click="Button_Click_14" />
+        <Button Content="Deserialise" Margin="804,436,295,332" Cursor="Hand" Click="Button_Click_15" />
+    </Grid>
+</Window>

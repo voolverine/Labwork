@@ -1,0 +1,14 @@
+<user_class>
+	<Int32>123</Int32>
+	<Int32>12</Int32>
+	<Int32>1</Int32>
+	<List`1>
+		<Count>1</Count>
+		<Tuple`2>
+			<Int32>5</Int32>
+			<Double>6</Double>
+		</Tuple`2>
+		<Int32>1</Int32>
+		<Int32>1</Int32>
+	</List`1>
+</user_class>
