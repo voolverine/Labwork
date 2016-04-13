@@ -1,3 +1,8 @@
+# Task 8
+# Cached - simple decorator that memoize values of functions
+# NOTE: cached can't work with named parameters
+
+
 def cached(func):
     def inner(*args):
         if args in inner.memoize:
