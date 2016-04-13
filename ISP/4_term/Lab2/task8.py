@@ -9,3 +9,14 @@ def cached(func):
 
     inner.memoize = {}
     return inner
+
+@cached
+def power(a, b):
+    result = 1
+
+    while b:
+        if (b & 1):
+            result *= a
+        a *= a
+        b >>= 1
+    return result
