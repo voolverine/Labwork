@@ -12,6 +12,7 @@ public:
     Treap(int key, int value): key(key), value(value), l(NULL), r(NULL) {}
     Treap() {}
 
+
     static pair<Treap *, Treap *> split(Treap *t, int key) 
     {
         if (t == NULL) 
@@ -31,6 +32,7 @@ public:
             return make_pair(res.first, t);
         }
     }
+
 
     static Treap *merge(Treap *t1, Treap *t2) 
     {
@@ -66,6 +68,58 @@ public:
         return splitted.first;
     }
 
+
+    static Treap *find(Treap *t, int key) 
+    {
+        if (t == NULL) 
+        {
+            return NULL;
+        }
+
+        if (key == t -> key) 
+        {
+            return t;
+        }
+        
+        if (key < t -> key) 
+        {
+            return find(t -> l, key);
+        } else 
+        {
+            return find(t -> r, key);
+        }
+    }
+
+
+
+    static Treap *removeLeftLeaf(Treap *t) 
+    {
+        if (t -> l == NULL) 
+        {
+            if (t -> r != NULL) 
+            {
+                return t -> r;
+            } else 
+            {
+                return NULL;
+            }
+        }
+
+        t -> l = removeLeftLeaf(t -> l);
+        return t;
+    }
+
+
+    static Treap *remove(Treap *t, int key) 
+    {
+        pair<Treap *, Treap *> splitted = split(t, key);
+
+        splitted.second = removeLeftLeaf(splitted.second);
+
+        return merge(splitted.first, splitted.second);
+    }
+
+
     static void show_treap(Treap *t, int tabs = 0) 
     {
         if (t == NULL) 
@@ -75,7 +129,7 @@ public:
 
         for (int i = 0; i < tabs; i++) 
         {
-            printf("    "); // tab = 4 :D
+            printf("    "); // tab == 4 :D
         }
         
         printf("key = %d value = %d\n", t -> key, t -> value);
@@ -107,9 +161,18 @@ int main()
         }
     }
 
+
     Treap :: show_treap(t);
+   
+/*  Remove example 
+ *  t = Treap :: remove(t, 2);
+ *  Treap :: show_treap(t);
+ */
 
-
-    return 0;
+/*  Find example
+ *  Treap *it = Treap :: find(t, 13);
+ *  printf("Found node key = %d, value = %d\n", it -> key, it -> value);
+ *  return 0;
+ */
 }
 
