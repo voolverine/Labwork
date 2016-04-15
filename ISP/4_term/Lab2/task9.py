@@ -4,10 +4,23 @@
 # Xrange(from, to) ========= goes in interval [from, to) with step = 1
 # Xrange(from, to, step) === goes in interval [from, to) with step = step
 
-def Xrange(*args):
-    if len(args) <= 0 or len(args) > 3:
-        raise ArgsError("Expected 1-3 params.")
 
+def validate(func):
+    def inner(*args):
+        for num in args:
+            if not (type(num) == int or type(num) == long):
+                raise TypeError("Int or long are only allowed.")
+
+        if len(args) <= 0 or len(args) > 3:
+            raise TypeError("Xrange takes 1-3 argumens ({0} given)".format(len(args)))
+
+        return func(*args)
+
+    return inner
+
+
+@validate
+def Xrange(*args):
     if len(args) == 1:
         cur = 0
 
