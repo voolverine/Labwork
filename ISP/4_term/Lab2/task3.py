@@ -1,3 +1,10 @@
+def isNumerical(x):
+    if type(x) == int or type(x) == long or type(x) == float \
+            or type(x) == bool:
+        return True
+    else:
+        return False
+
 def to_json(obj, raise_unknown=None):
     if (raise_unknown == None):
         raise_unknown = False
@@ -14,18 +21,25 @@ def to_json(obj, raise_unknown=None):
 
     elif type(obj) == dict:
         ans.append('{')
+
         for item in obj.items():
-            ans.append('\"')
-            ans.append(to_json(item[0]))
-            ans.append('\"')
+            if isNumerical(item[0]):    # Key cannot be number in json -> Convert to str
+                ans.append("\"")
+                ans.append(to_json(item[0]))
+                ans.append("\"")
+            else:
+                ans.append(to_json(item[0]))
+
             ans.append(": ")
             ans.append(to_json(item[1]))
             ans.append(", ")
 
         ans = ans[:-1]
         ans.append('}')
-    elif type(obj) == int or type(obj) == long or type(obj) == float:
+
+    elif isNumerical(obj):
         ans.append(str(obj))
+
     elif type(obj) == str:
         ans.append('\"')
         string_literals = ["\\", "\"", "\'", "\b", "\f", "\n", "\r", "\t", "\v"]
