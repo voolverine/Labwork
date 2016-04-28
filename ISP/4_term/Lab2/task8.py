@@ -4,7 +4,8 @@
 
 
 def primitiveToImmutable(obj):
-    immutable = [int, long, float, bool, str, tuple, unicode, frozenset]
+    # Add your immutable and hashable types :D
+    immutable = [int, long, float, bool, str, tuple, unicode, frozenset, range, xrange]
 
     if type(obj) in immutable:
         return obj
