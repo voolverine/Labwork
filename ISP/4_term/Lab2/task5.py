@@ -1,34 +1,29 @@
-
 class Logger(object):
-    @classmethod
-    def logger(cls, func):
-        def inner(self, *args, **kwargs):
-            self.log += "{0} was called with args = \
-                            str(args) + {1} kwargs = {2}\n".format(func.__name, args, kwargs)
 
-            return func(*args, **kwargs)
-        return inner
+    def __init__(self):
+        # print "init executing"
+        self._log = []
 
 
     def __str__(self):
-        return self.log
+        # print "str executing"
+        log = []
 
+        for i in self._log:
+            log.append("{0} called with args = {1}, kwargs = {2}, result = {3}".
+                            format(i[0], i[1], i[2], i[3]))
 
-    def __new__(self):
-        self.log = ""
+        return '\n'.join(log)
 
-        for func in self.__dict__:
-            if hasattr(getattr(self, func), "__name__") and \
-               getattr(self, "__name__") != "logger" and callable(getattr(self, func)):
-                setattr(self, func, Logger.logger(getattr(self, func)))
-                print func
+    def __getattribute__(self, attr):
+        # print "getattribute executing"
+        super_attr = super(Logger, self).__getattribute__(attr)
+        if callable(super_attr):
+            def logger(*args, **kwargs):
+                res = super_attr(*args, **kwargs) 
+                self._log.append([attr, args, kwargs, res])
+                return res
 
-        return self
-
-
-class test(Logger):
-    def fi(self, x):
-        return x * x
-
-    def log(self):
-        print Logger.str(self)
+            return logger
+        else:
+            return super_attr 
