@@ -2,86 +2,56 @@ import argparse
 import random
 
 
-MIN_WORD_LEN = 1
-MAX_WORD_LEN = 100000
-
-MIN_NUMBER = -1000000000
-MAX_NUMBER = 1000000000
-
-fields_number = None
-numeric = None
-field_separator = None
-line_separator = None
-line_number = None
+def generateNumber(maxn):
+    return str(random.randrange(-maxn, maxn))
 
 
-def generate_word(File):
-    length = random.randrange(MIN_WORD_LEN, MAX_WORD_LEN, 1)
+def generateWord(maxn):
+    lenght = random.randrange(1, maxn)
+    special = ['\n', '\t', '\b', '\r', '\v']
 
-    for i in xrange(length):
-        File.write(chr(random.randrange(0, 256, 1)))
-    return
+    result = []
+    for i in xrange(0, maxn):
+        ch = ""
+        while 42:
+            ch = chr(random.randrange(0, 256))
+            if ch not in special:
+                break;
+        result.append(ch)
 
-
-def generateInt(File):
-    File.write(str(random.randrange(MIN_NUMBER, MAX_NUMBER, 1)))
-    return
-
-
-def generateLine(File):
-    global numeric
-    global field_separator
-    global line_separator
-
-    f = None
-    if numeric:
-        f = generateInt
-    else:
-        f = generate_word
+    return "".join(result)
 
 
-    for i in xrange(fields_number - 1):
-        f(File)
-        File.write(field_separator)
+def generate(args):
+    MAX_WORD_LENGTH = 10
+    MAX_ABSINT = 2100000000
 
-    f(File)
-    File.write(line_separator)
+    with open(args.file_name, "w") as f:
+        for i in xrange(int(args.lines_number)):
+            for j in xrange(int(args.fields_in_line)):
+                if args.ascii:
+                    f.write(generateWord(MAX_WORD_LENGTH))
+                else:
+                    f.write(generateNumber(MAX_ABSINT))
+                
+                f.write(args.fields_separator)
 
-
-def generate(File):
-    global line_number
-
-    for i in xrange(line_number):
-        generateLine(File)
+            if (i != int(args.lines_number) - 1):
+                f.write(args.lines_separator)
 
 
 def main():
 
-    global fields_number
-    global numeric
-    global field_separator
-    global line_separator
-    global line_number
-
-    parser = argparse.ArgumentParser(description="Customise output result.", formatter_class=argparse.RawTextHelpFormatter)
-    parser.add_argument("-fn", "--fields_number", action="store", default="5", help="Defines number of fields in one line.")
-    parser.add_argument("-n", "--numeric", action="store_true", help="Defines numeric or ascii output.")
-    parser.add_argument("-fs", "--field_separator", action="store", default=" ", help="Defines separator between fields.")
-    parser.add_argument("-ls", "--line_separator", action="store", default="\n", help="Defines separator between lines.")
-    parser.add_argument("-ln", "--line_number", action="store", default="500", help="Defines lines number")
-    parser.add_argument("-f", "--file_name", action="store", default="out", help="Defines output file name")
-
+    parser = argparse.ArgumentParser(description="Specifies generared sequences.")
+    parser.add_argument("-fl", "--fields_in_line", action="store", default="5", help="Defines number of fields in one line.")
+    parser.add_argument("-ln", "--lines_number", action="store", default="50", help="Defines number of lines in file.")
+    parser.add_argument("-fs", "--fields_separator", action="store", default="\t", help="Defines separator of fields in one line.")
+    parser.add_argument("-ls", "--lines_separator", action="store", default="\n", help="Defines separator of lines in file.")
+    parser.add_argument("-a", "--ascii", action="store_true", help="Defines ascii fields if argument specified.")
+    parser.add_argument("-fn", "--file_name", action="store", default="out", help="Defines output file name")
     args = parser.parse_args()
 
-    fields_number = int(args.fields_number)
-    numeric = args.numeric
-    field_separator = args.field_separator
-    line_separator = args.field_separator
-    line_number = int(args.line_number)
-
-    with open(args.file_name, "w") as f:
-        generate(f)
-
+    generate(args)
 
 if __name__ == "__main__":
     main()
