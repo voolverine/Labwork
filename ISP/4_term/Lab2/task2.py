@@ -29,7 +29,7 @@ def generate(args):
     with open(args.file_name, "w") as f:
         for i in xrange(int(args.lines_number)):
             for j in xrange(int(args.fields_in_line)):
-                if args.ascii:
+                if not args.numeric:
                     f.write(generateWord(MAX_WORD_LENGTH))
                 else:
                     f.write(generateNumber(MAX_ABSINT))
@@ -47,7 +47,7 @@ def main():
     parser.add_argument("-ln", "--lines_number", action="store", default="50", help="Defines number of lines in file.")
     parser.add_argument("-fs", "--fields_separator", action="store", default="\t", help="Defines separator of fields in one line.")
     parser.add_argument("-ls", "--lines_separator", action="store", default="\n", help="Defines separator of lines in file.")
-    parser.add_argument("-a", "--ascii", action="store_true", help="Defines ascii fields if argument specified.")
+    parser.add_argument("-n", "--numeric", action="store_true", help="Defines numeric fields if argument specified.")
     parser.add_argument("-fn", "--file_name", action="store", default="out", help="Defines output file name")
     args = parser.parse_args()
 
