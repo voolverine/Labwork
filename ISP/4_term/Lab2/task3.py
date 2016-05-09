@@ -1,9 +1,23 @@
+def literalToJson(ch):
+    string_literals = ["\\", "\"", "\'", "\b", "\f", "\n", "\r", "\t", "\v"]
+    replace_literals = ["\\\\", "\\\"", "\'", "\\b", "\\f", "\\n", "\\r", "\\t", "\\v"] 
+
+    ans = ch
+    for i in xrange(len(string_literals)):
+        if string_literals[i] == ch:
+            ans = replace_literals[i]
+            break
+
+    return ans
+
+
 def isNumerical(x):
     if type(x) == int or type(x) == long or type(x) == float \
             or type(x) == bool:
         return True
     else:
         return False
+
 
 def to_json(obj, raise_unknown=None):
     if (raise_unknown == None):
@@ -42,13 +56,8 @@ def to_json(obj, raise_unknown=None):
 
     elif type(obj) == str:
         ans.append('\"')
-        string_literals = ["\\", "\"", "\'", "\b", "\f", "\n", "\r", "\t", "\v"]
-
         for char in obj:
-            if (char in string_literals):
-                ans.append("\\" + char)
-            else:
-                ans.append(char)
+            ans.append(literalToJson(char))
 
         ans.append('\"')
     else:
