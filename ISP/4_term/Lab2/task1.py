@@ -1,6 +1,5 @@
 import argparse
 import tempfile
-import os
 import sys
 
 
@@ -306,6 +305,7 @@ def sort(cmp=None, in_file_name=None, out_file_name=None, lines_separator=None,
 
 
     to_sortedTempFiles()
+    print "Used {0} tempfiles to sort.".format(len(temp_files))
     merge_sortedTempFiles()
 
     with open(out_file_name, "w") as f:
@@ -325,7 +325,7 @@ def main():
     parser.add_argument("-k", "--key", action="store", default="all", help="Defines indexes in string to sort.")
     parser.add_argument("-n", "--numeric", action="store_true", help="Defines to interpret fields as numbers.")
     parser.add_argument("--check", action="store_true", help="Defines only to check if sequence is sorted according to all setted options.")
-    parser.add_argument("--buffer_size", action="store", default="10241024", help="Defines sort buffer size.")
+    parser.add_argument("--buffer_size", action="store", default="1048576", help="Defines sort buffer size.")
     parser.add_argument("--reverse", action="store_true", help="Defines if sort should be reversed.")
 
     args = parser.parse_args()
