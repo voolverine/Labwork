@@ -1,6 +1,7 @@
 import argparse
 import tempfile
 import os
+import sys
 
 
 def strNumsToIntList(str):
@@ -37,9 +38,6 @@ def cmp1(tfirst, tsecond, key, numeric):
             second.append(tsecond[i])
 
     if numeric:
-        first = map(int, first)
-        second = map(int, second)
-
         for i in xrange(min(len(first), len(second))):
             if first[i] > second[i]:
                 return False
@@ -54,7 +52,7 @@ def cmp1(tfirst, tsecond, key, numeric):
         return first <= second
 
 
-def cmp2(tfirst, tsecond, numeric):
+def cmp2(tfirst, tsecond, key, numeric):
     first = []
     second = []
 
@@ -69,9 +67,6 @@ def cmp2(tfirst, tsecond, numeric):
 
 
     if numeric:
-        first = map(int, first)
-        second = map(int, second)
-
         for i in xrange(min(len(first), len(second))):
             if first[i] < second[i]:
                 return False
@@ -86,7 +81,40 @@ def cmp2(tfirst, tsecond, numeric):
         return first >= second
 
 
-def read_line(f, fields_separator, lines_separator):
+def merge_sort(arr, cmp, key, numeric):
+    def sort(arr):
+        if len(arr) == 1:
+            return arr 
+
+        left = sort(arr[:len(arr) / 2])
+        right = sort(arr[len(arr) / 2:])
+        
+        del arr[:]
+        l = 0
+        r = 0
+
+        while l < len(left) and r < len(right):
+            if cmp(left[l], right[r], key, numeric):
+                arr.append(left[l]) 
+                l += 1
+            else:
+                arr.append(right[r])
+                r += 1
+
+        while l < len(left):
+            arr.append(left[l])
+            l += 1
+        while r < len(right):
+            arr.append(right[r])
+            r += 1
+
+        return arr
+    
+    arr = sort(arr)
+
+        
+
+def read_line(f, fields_separator, lines_separator, numeric):
     temp = []
     fields = []
 
@@ -106,18 +134,19 @@ def read_line(f, fields_separator, lines_separator):
 
         temp.append(char)
 
+    if numeric:
+        fields = map(int, fields)
+
     return fields
 
 
-def check(cmp=None, in_file_name=None, out_file_name=None, lines_separator=None,
-            fields_separator=None, key=None, numeric=None, bufer_size=None):
+def check(cmp=None, in_file_name=None, lines_separator=None,
+            fields_separator=None, key=None, numeric=None):
 
     if cmp == None:
         cmp = cmp1
     if in_file_name == None:
         in_file_name = "input"
-    if out_file_name == None:
-        out_file_name = "output"
     if lines_separator == None:
         lines_separator = '\n'    
     if fields_separator == None:
@@ -128,14 +157,12 @@ def check(cmp=None, in_file_name=None, out_file_name=None, lines_separator=None,
         key = strNumsToIntList(key)
     if numeric == None:
         numeric = False
-    if bufer_size == None:
-        bufer_size = 1024
 
     with open(in_file_name, 'r') as f:
-        prev_line = read_line(f, fields_separator, lines_separator)
+        prev_line = read_line(f, fields_separator, lines_separator, numeric)
         
         while 42:
-            next_line = read_line(f, fields_separator, lines_separator)
+            next_line = read_line(f, fields_separator, lines_separator, numeric)
             if len(next_line) == 0:
                 break
 
@@ -148,7 +175,7 @@ def check(cmp=None, in_file_name=None, out_file_name=None, lines_separator=None,
 
 
 def sort(cmp=None, in_file_name=None, out_file_name=None, lines_separator=None,
-            fields_separator=None, key=None, numeric=None, bufer_size=None):
+            fields_separator=None, key=None, numeric=None, buff_size=None):
 
     if cmp == None:
         cmp = cmp1
@@ -166,9 +193,65 @@ def sort(cmp=None, in_file_name=None, out_file_name=None, lines_separator=None,
         key = strNumsToIntList(key)
     if numeric == None:
         numeric = False
-    if bufer_size == None:
-        bufer_size = 1024
+    if buff_size == None:
+        buff_size = 1048576
 
+
+    def writeToFile(f, lines):
+        #print "to file {0}, write {1}".format(f, lines)
+        for line in lines:
+            f.write(line[0])
+
+            for j in xrange(1, len(line)):
+                f.write(fields_separator)
+                f.write(line[j])
+
+            f.write(lines_separator)
+
+        f.seek(0)
+
+
+
+    temp_files = []
+
+    def to_sortedTempFiles():
+        with open(in_file_name, "r") as f:
+            lines = []
+            cur_buffsize = 0
+
+            while 42:
+                line = read_line(f, fields_separator, lines_separator, numeric)
+                print line
+                if line == []:
+                    break
+                if cur_buffsize + sys.getsizeof(line) >= buff_size:
+                    tmp = tempfile.TemporaryFile()
+                    merge_sort(lines, cmp, key, numeric)
+                    writeToFile(tmp, lines)
+                    temp_files.append(tmp)
+                    del lines[:]
+                    lines.append(line)
+                    cur_buffsize = sys.getsizeof(line)
+
+                else:
+                    cur_buffsize += sys.getsizeof(line)
+                    lines.append(line)
+
+            if len(lines) > 0:
+                    tmp = tempfile.TemporaryFile()
+                    merge_sort(lines, cmp, key, numeric)
+                    writeToFile(tmp, lines)
+                    temp_files.append(tmp)
+                    del lines[:]
+
+            print temp_files
+            print cur_buffsize
+
+            for i in xrange(8):
+                print read_line(temp_files[0], fields_separator, lines_separator, numeric)
+
+
+    to_sortedTempFiles()
 
 #    def merge_sort():
 
@@ -184,7 +267,7 @@ def main():
     parser.add_argument("-k", "--key", action="store", default="all", help="Defines indexes in string to sort.")
     parser.add_argument("-n", "--numeric", action="store_true", help="Defines to interpret fields as numbers.")
     parser.add_argument("--check", action="store_true", help="Defines only to check if sequence is sorted according to all setted options.")
-    parser.add_argument("--buffer_size", action="store", default="1024", help="Defines sort buffer size.")
+    parser.add_argument("--buffer_size", action="store", default="1048576", help="Defines sort buffer size.")
     parser.add_argument("--reverse", action="store_true", help="Defines if sort should be reversed.")
 
     args = parser.parse_args()
@@ -196,9 +279,10 @@ def main():
 
     if args.check:
         print check(cmp, args.input, args.output, args.lines_separator,
-                args.fields_separator, args.key, args.numeric, args.buffer_size)
+                args.fields_separator, args.key, args.numeric, int(args.buffer_size))
     else:
-        sort(args, cmp)
+        print sort(cmp, args.input, args.output, args.lines_separator,
+                args.fields_separator, args.key, args.numeric, int(args.buffer_size))
 
 
 
