@@ -11,12 +11,14 @@ def strNumsToIntList(str):
         if i == ',':
             ans.append(''.join(cur))
             del cur[:]
+            continue
 
         cur.append(i)
 
     if len(cur) > 0:
         ans.append(''.join(cur))
         del cur[:]
+    print ans
 
     ans = map(int, ans)
     
@@ -336,10 +338,10 @@ def main():
         cmp = cmp1
 
     if args.check:
-        print check(cmp, args.input, args.output, args.lines_separator,
-                args.fields_separator, args.key, args.numeric, int(args.buffer_size))
+        print check(cmp, args.input, args.lines_separator,
+                args.fields_separator, args.key, args.numeric)
     else:
-        print sort(cmp, args.input, args.output, args.lines_separator,
+        sort(cmp, args.input, args.output, args.lines_separator,
                 args.fields_separator, args.key, args.numeric, int(args.buffer_size))
 
 
