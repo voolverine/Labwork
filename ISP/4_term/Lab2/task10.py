@@ -1,14 +1,22 @@
-import copy
-
 class sequence(object):
-    def __init__(self, s):
+    def __init__(self, s, filters = None):
         if not hasattr(s, "__iter__"):
             raise TypeError("Not iterable object. ;(")
+
+
+        if filters == None:
+            self.filters = None
+        else:
+            self.filters = filters
+
         self.sequence = s
 
 
     def __iter__(self):
-        return self.sequence.__iter__()
+        if self.filters == None:
+            return self.sequence.__iter__()
+        else:
+            return (i for i in self.sequence.__iter__() if self.filters(i))
 
 
     def __str__(self):
@@ -20,12 +28,4 @@ class sequence(object):
 
     
     def filter(self, func):
-        tsequence = copy.deepcopy(self.sequence)
-        for i in list(tsequence):
-            if not func(i):
-                if hasattr(tsequence, "remove"):
-                    tsequence.remove(i)
-                elif hasattr(tsequence, "__delitem__"):
-                    del tsequence[i]
-
-        return sequence(tsequence)
+        return sequence(self, func)
