@@ -2,6 +2,7 @@
 
 import urllib2
 from bs4 import BeautifulSoup
+from urlparse import urljoin
 
 
 class Crawler(object):
@@ -21,14 +22,23 @@ class Crawler(object):
         return response.read()
 
     @staticmethod
-    def get_all_urls_from_page(page):
-        soup = BeautifulSoup(page)
-        for a in soup.find_all('a', href=True):
-            print "Found the URL: ", a['href']
+    def get_all_urls_from_page(url, page):
+        soup = BeautifulSoup(page, "html.parser")
+        result = []
+
+        for link_tag in soup.find_all('a', href=True):
+            # character '#' for anchors, it is not links ;(
+            link = link_tag['href']
+            if len(link) > 0 and link[0] != '#': 
+                result.append(urljoin(url, link))
+
+        return result
 
 def main():
-    page = Crawler.downloadUrl("http://docs.python.org/")
-    print Crawler.get_all_urls_from_page(page)
+    url = "http://docs.python.org/"
+    page = Crawler.downloadUrl(url)
+
+    print Crawler.get_all_urls_from_page(url, page)
 
 
 if __name__ == "__main__":
