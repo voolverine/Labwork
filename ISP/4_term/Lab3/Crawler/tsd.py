@@ -1,4 +1,6 @@
 import threading
+import os
+import os.path
 import json
 
 class thread_safe_dict(object):
@@ -60,7 +62,7 @@ class thread_safe_dict(object):
         with open(file_path, 'w') as f:
             f.write(self.to_json())
 
-    def read_from_file(self, file_path):
+    def load_from_file(self, file_path):
         text = None
         
         if not os.path.exists(file_path):

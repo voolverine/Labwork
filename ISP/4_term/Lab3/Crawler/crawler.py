@@ -116,7 +116,7 @@ class Crawler(object):
 
 def main():
     url = "http://docs.python.org/"
-    crawler = Crawler(thread_count=4, start_url=url, crawling_depth=5, storage_dir="downloaded_urls")
+    crawler = Crawler(thread_count=4, start_url=url, crawling_depth=3, storage_dir="downloaded_urls")
     crawler.start_crawling()
 
     while True:

@@ -21,7 +21,7 @@ class thread_safe_set(object):
             lock.release() 
 
 
-    def is_alreay(self, obj):
+    def __contains__(self, obj):
         is_already_in_set = True
 
         try:

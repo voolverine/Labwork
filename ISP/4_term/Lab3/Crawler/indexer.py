@@ -1,5 +1,6 @@
 import os.path
 import os
+import textworker
 import tsd
 import tss
 import Queue
@@ -16,7 +17,7 @@ class Indexer(object):
         self.inverted_index_filename = inverted_index_filename
         self.id_to_filename_table_filename = id_to_filename_table_filename
         
-        # Event if everythin is indexed
+        # Event if everything is indexed
         self._stop = threading.Event()
 
         self.thread_pool = []
@@ -47,27 +48,6 @@ class Indexer(object):
 
         return encounted
     
-    @staticmethod
-    def split_text_in_words(text):
-        split_by = [',', '.', '\\', '/', '\n', '\t', ':', '!', '?', ';', '-', ' ', \
-                        '}', '{', '\r', '\'', '\"', '(', ')', '#', '$', '%', '^', '&', '*', \
-                        '>', '<'] 
-
-        # to append last word, add fake point to the end
-        ''.join([text, '.']) 
-
-        words = []
-        buffer = []
-
-        for character in text:
-            if character in split_by:
-                if len(buffer) > 0:
-                    words.append(''.join(buffer))
-                buffer = []
-            else:
-                buffer.append(character)
-
-        return words
 
     def add_file_to_index(self, filename):
 
@@ -81,7 +61,7 @@ class Indexer(object):
         with open(os.path.join(self.storage_dir, filename), 'r') as f:
             text = f.read()
 
-        words = Indexer.split_text_in_words(text)
+        words = textworker.split_text_in_words(text)
         words = Indexer.encount_each_word(words)
 
         for word, count in words.iteritems():
@@ -125,7 +105,7 @@ class Indexer(object):
 
 
 def main():
-    indexer = Indexer(storage_dir='downloaded_urls', thread_count=2, inverted_index_filename='index', \
+    indexer = Indexer(storage_dir='downloaded_urls', thread_count=1, inverted_index_filename='index', \
                         id_to_filename_table_filename='id_to_filename')
     indexer.make_index_from_dir()
 
