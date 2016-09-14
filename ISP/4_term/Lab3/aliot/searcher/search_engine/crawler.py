@@ -115,8 +115,8 @@ class Crawler(object):
                 f.write(text.encode('utf-8'))
 
 def main():
-    url = "http://docs.python.org/"
-    crawler = Crawler(thread_count=4, start_url=url, crawling_depth=3, storage_dir="downloaded_urls")
+    url = "http://simple.wikipedia.org/wiki/Python"
+    crawler = Crawler(thread_count=4, start_url=url, crawling_depth=10, storage_dir="downloaded_urls")
     crawler.start_crawling()
 
     while True:

@@ -1,0 +1,49 @@
+<!--DOCTYPE html -->
+
+<html>
+    <head>
+        {% load staticfiles %}
+        <script src="{% static "searcher/jquery-2.2.4.min.js" %}" ></script>
+        <script type='text/javascript'> 
+            $(document).ready(function() {
+                $('#submit_button').click(function() {
+                    $.ajax({
+                        url: 'add_index_request/',
+                        type: 'get',
+                        data: {request: $('#urls_list').val()},
+                        success: function(response) {
+                            new_value = ''
+                            for (var i = 0; i < response.status.length; i++) 
+                            {
+                                if (response.status[i][0] == 'true') 
+                                {
+                                    new_value += response.status[i][1] + '___________________________' +
+                                            response.status[i][0] + '\n'
+                                } else 
+                                {
+                                    new_value += response.status[i][1] + '__________________________' +
+                                                response.status[i][0] + '\n'
+                                }
+                            }
+                            $('#urls_list').val(new_value);
+                        }
+                    })
+                });
+            });
+        </script>
+    </head>
+
+    <body>
+        <form >
+            {% csrf_token %}
+            <div style='margin: 0 auto; width: 70%;'>
+                <textarea id='urls_list' placeholder='Write each url in the new line' style='width: 100%; height: 90%;'> </textarea>
+            </div>
+            <div style='text-align: center;'>
+                <input type='button' name='btn' value='Add to index' id='submit_button' style='marging: 0 auto'/>
+            </div>
+        </form>
+
+    </body>
+</html>
+

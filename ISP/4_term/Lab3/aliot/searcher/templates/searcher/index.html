@@ -1,0 +1,42 @@
+<!--DOCTYPE html -->
+
+<html>
+    <head>
+        {% load staticfiles %}
+        <script src="{% static "searcher/jquery-2.2.4.min.js" %}" ></script>
+        <script type='text/javascript'> 
+            $(document).ready(function() {
+                $('#submit_button').click(function() {
+                    $.ajax({
+                        url: 'search_request/',
+                        type: 'get',
+                        data: {request: $('#request').val()},
+                        success: function(response) {
+                            $('#search_results tr').remove()
+
+                            for (var i = 0; i < response.urls.length; i++) 
+                            {
+                                var new_line = '<tr><td><a href="' + response.urls[i] + '">' + response.urls[i] + '</a></td></tr>'
+                                $('#search_results').find('tbody:last').append(new_line)
+                            }
+                        }
+                    })
+                });
+            });
+        </script>
+    </head>
+
+    <body>
+        <form >
+            {% csrf_token %}
+            <input type='text' name='request' maxlength=100 id='request' />
+            <input type='button' name='btn' value='Submit' id='submit_button' />
+        </form>
+
+        <table id="search_results">
+            <tbody>
+            </tbody>
+        </table>
+
+    </body>
+</html>

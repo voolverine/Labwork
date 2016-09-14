@@ -55,7 +55,10 @@ class thread_safe_dict(object):
         return json.dumps(self.dict, indent=4)
 
     def from_json(self, text):
-        self.dict = json.loads(text)
+        try:
+            self.dict = json.loads(text)
+        except:
+            pass
         return
 
     def write_to_file(self, file_path):

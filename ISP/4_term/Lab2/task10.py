@@ -13,6 +13,7 @@ class sequence(object):
 
 
     def __iter__(self):
+
         if self.filters == None:
             return self.sequence.__iter__()
         else:

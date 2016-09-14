@@ -2,11 +2,15 @@ import re
 
 def remove_indentation(text):
     indent = ['\n', '\t', ' ']
+    quotes_count = 0
     result = []
 
     for character in text:
-        if character not in indent:
+        if character not in indent or quotes_count != 0:
             result.append(character)
+
+        if character == '\"':
+            quotes.count ^= 1
 
     return "".join(result)
 

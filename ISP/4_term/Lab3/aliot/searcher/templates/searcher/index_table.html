@@ -1,0 +1,170 @@
+<!--DOCTYPE html -->
+
+<html>
+    <head>
+        {% load staticfiles %}
+        <script src="{% static "searcher/jquery-2.2.4.min.js" %}" ></script>
+        <script type='text/javascript'> 
+            var urls_list = []    
+            var current_url = -1
+
+
+            function generate_radio_handler(i) 
+            {
+                id = '#in' + i.toString()
+                $(id).change(function() 
+                {
+                    var text_area = $('#page_text') 
+                    var text = get_page_text(urls_list[i])
+                    text_area.val(text)
+                    current_url = i
+                })
+            }
+
+
+            function set_handlers() 
+            {
+                for (var i = 0; i < urls_list.length; i++) 
+                {
+                    generate_radio_handler(i)
+                }
+            }
+
+
+            function get_sequence(k) 
+            {
+                $('#all_urls').empty() 
+
+                $.ajax({
+                    url: '',
+                    type: 'get',
+                    data: {request_type: 'get_index',
+                            page_number: k},
+                    success: function(response) 
+                    {
+                        urls_list = response.urls.slice()
+                        var div = $('#all_urls')
+
+                        for (var i = 0; i < response.urls.length; i++) 
+                        {
+                            var input = '<div style="display: inline-block;"><input type="radio" id="in' + i.toString() + '" name="url"/></div>'
+                            var str = response.urls[i]
+
+                            if (str.length > 50) 
+                            {
+                                str = str.slice(0, 50)
+                                str += ',,,'
+                            }
+                            
+                            var href = '<a href="' + response.urls[i] + '">' + str + '</a>'
+                            var url = '<div style="display: inline-block">' + href + '</div>'
+                            var new_div = '<div>' + input + url + '</div>'
+                            div.append(new_div)
+                        }
+                        set_handlers()
+                        current_url = -1
+                    }
+                })
+            }
+
+
+            function get_page_text(processing_url) 
+            {
+                text = '' 
+                $.ajax({
+                    url: '',
+                    type: 'get',
+                    async: false,
+                    data: {request_type: 'get_url_text',
+                        url: processing_url},
+                    success: function(response) 
+                    {
+                        text = response.text
+                    }
+                })
+
+                return text
+            }
+
+
+            function add_save_handler() 
+            {
+                $('#save_btn').click(function() {
+
+                    if (current_url == -1) 
+                    {
+                        return
+                    }
+
+                    $.ajax({
+                        url: '',
+                        type: 'get',
+                        async: false,
+                        data: {request_type: 'save',
+                                url: urls_list[current_url],
+                                text: $('#page_text').val},
+                        success: function(response) {
+                            alert('Saved') 
+                        }
+                    })
+
+                });
+            }
+
+            function get_page_number() 
+            {
+                var page_number = 0
+
+                $.ajax({
+                    url: '',
+                    type: 'get',
+                    async: false,
+                    data: {request_type: 'get_page_number'},
+                    success: function(response) {
+                        page_number = response.page_number 
+                    }
+                })
+
+                return page_number
+            }
+
+            function add_page_switcher() {
+                page_number = get_page_number()
+                
+                for (var i = 1; i <= page_number; i++) 
+                {
+                    new_line = '<option>' + i.toString() + '</option>'
+                    $('#switcher').append(new_line)
+                }
+
+                $('#switcher').on('change', function() {
+                    get_sequence(parseInt(this.value))                    
+                })
+            }
+
+
+            $(document).ready(function() {
+                get_sequence(1)                
+                add_save_handler()    
+                add_page_switcher()
+            });
+        </script>
+    </head>
+
+    <body>
+        <select id='switcher'></select>
+        <form >
+            {% csrf_token %}
+            <div style='display: inline-block; width: 40%; word-wrap: break-word;' id='all_urls'>
+            </div>
+
+            <div style='display: inline-block; vertical-align: top; min-width: 50%; min-height: 40%;'>
+                <textarea id='page_text' style='min-width: 100%; min-height: 100%; resize: none;'> </textarea>
+                <div style='text-align: center;'>
+                    <input type='button' value='save' id='save_btn'>
+                </div>
+            </div>
+        </form>
+
+    </body>
+</html>
