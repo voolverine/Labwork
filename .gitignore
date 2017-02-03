@@ -17,3 +17,4 @@
 **/output
 **/*.swm
 **/*.swn
+**/llvm/
